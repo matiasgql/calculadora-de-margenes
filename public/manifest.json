@@ -5,7 +5,7 @@
   "scope": "/",
   "display": "standalone",
   "icons": [
-    { "src": "/assets/logo 192px.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/assets/logo 512px.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/logo192px.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo512px.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
