@@ -3,9 +3,19 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="manifest" href="/manifest.json">
 		<script src="/src/main.js"/>
+		<script>
+			// Registramos el service worker
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', () => {
+				// IMPORTANTE: En GitHub Pages la ruta debe empezar con ./ para que funcione bien
+				navigator.serviceWorker.register('./sw.js')
+					.then(reg => console.log('SW registrado con éxito', reg))
+					.catch(err => console.error('Error al registrar SW', err));
+				});
+			}
+		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>Calculadora de Precios y Márgenes</title>
 	</head>
