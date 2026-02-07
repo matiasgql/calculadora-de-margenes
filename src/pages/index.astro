@@ -7,5 +7,76 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout>
-	<Welcome />
+    <div class="container">
+        <h1>Calculadora de Márgenes</h1>
+        <p class="subtitle">Calcula márgenes y precios de venta</p>
+
+        <form id="priceForm">
+            <div class="form-group">
+                <label for="precioCosto">Precio de Costo</label>
+                <div class="input-wrapper">
+                    <span class="prefix">$</span>
+                    <input type="number" id="precioCosto" step="0.01" min="0" class="has-prefix" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="precioVenta">Precio de Venta</label>
+                <div class="input-wrapper">
+                    <span class="prefix">$</span>
+                    <input type="number" id="precioVenta" step="0.01" min="0" class="has-prefix" placeholder="0.00">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="margenGanancia">Margen de Ganancia (%)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="margenGanancia" step="0.01" min="0" max="100" class="has-suffix" placeholder="0.00">
+                    <span class="suffix">%</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="markup">Markup (%)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="markup" step="0.01" min="0" class="has-suffix" placeholder="0.00">
+                    <span class="suffix">%</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn-calculate">Calcular</button>
+                <button type="button" class="btn-reset" onclick="resetForm()">Limpiar</button>
+            </div>
+        </form>
+
+        <div id="result" class="result">
+            <div class="result-item">
+                <span class="result-label">Precio de Costo:</span>
+                <span class="result-value" id="resultCosto">$0.00</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Precio de Venta:</span>
+                <span class="result-value" id="resultVenta">$0.00</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Margen de Ganancia:</span>
+                <span class="result-value" id="resultMargen">0%</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Markup:</span>
+                <span class="result-value" id="resultMarkup">0%</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Ganancia:</span>
+                <span class="result-value" id="resultGanancia">$0.00</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>Fórmulas:</strong>
+            • Margen = (Precio Venta - Precio Costo) / Precio Venta × 100<br>
+            • Markup = (Precio Venta - Precio Costo) / Precio Costo × 100
+        </div>
+    </div>
 </Layout>
