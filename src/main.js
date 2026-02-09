@@ -1,77 +1,113 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('priceForm');
+document.addEventListener('DOMContentLoaded', function () {
     const precioCosto = document.getElementById('precioCosto');
     const precioVenta = document.getElementById('precioVenta');
     const margenGanancia = document.getElementById('margenGanancia');
     const markup = document.getElementById('markup');
-    const result = document.getElementById('result');
+    const resetBtn = document.getElementById('resetBtn');
+    const ganancia = document.getElementById('ganancia');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        calcular();
+    // Flags to prevent infinite loops during updates
+    let isUpdating = false;
+
+    function updateFromCostAndMarkup() {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        const cost = parseFloat(precioCosto.value) || 0;
+        const markupValue = parseFloat(markup.value) || 0;
+
+        if (cost > 0) {
+            const price = cost * (1 + markupValue / 100);
+            const margin = ((price - cost) / price) * 100;
+
+            precioVenta.value = price.toFixed(2);
+            margenGanancia.value = margin.toFixed(2);
+            ganancia.value = (price - cost).toFixed(2);
+        }
+
+        isUpdating = false;
+    }
+
+    function updateFromCostAndMargin() {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        const cost = parseFloat(precioCosto.value) || 0;
+        const margin = parseFloat(margenGanancia.value) || 0;
+
+        if (cost > 0 && margin < 100) {
+            const price = cost / (1 - margin / 100);
+            const calculatedMarkup = ((price - cost) / cost) * 100;
+
+            precioVenta.value = price.toFixed(2);
+            markup.value = calculatedMarkup.toFixed(2);
+            ganancia.value = (price - cost).toFixed(2);
+        }
+
+        isUpdating = false;
+    }
+
+    function updateFromPriceAndCost() {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        const price = parseFloat(precioVenta.value) || 0;
+        const cost = parseFloat(precioCosto.value) || 0;
+
+        if (price > 0 && cost > 0) {
+            const margin = ((price - cost) / price) * 100;
+            const calculatedMarkup = ((price - cost) / cost) * 100;
+
+            margenGanancia.value = margin.toFixed(2);
+            markup.value = calculatedMarkup.toFixed(2);
+            ganancia.value = (price - cost).toFixed(2);
+        }
+
+        isUpdating = false;
+    }
+
+    function updateFromCostAndProfit() {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        const cost = parseFloat(precioCosto.value) || 0;
+        const profit = parseFloat(ganancia.value) || 0;
+
+        if (cost > 0) {
+            const price = cost + profit;
+            const margin = (profit / price) * 100;
+            const calculatedMarkup = (profit / cost) * 100;
+
+            precioVenta.value = price.toFixed(2);
+            margenGanancia.value = margin.toFixed(2);
+            markup.value = calculatedMarkup.toFixed(2);
+        }
+
+        isUpdating = false;
+    }
+
+    // Event Listeners
+    // Cost change triggers recalc based on active strategy (defaulting to keeping markup constant usually)
+    // But to keep it simple: Changing Cost keeps Markup constant and updates Price & Margin
+    precioCosto.addEventListener("input", updateFromCostAndMarkup);
+
+    // Changing Markup updates Price & Margin (Cost constant)
+    markup.addEventListener("input", updateFromCostAndMarkup);
+
+    // Changing Profit (Ganancia) updates Price, Margin & Markup
+    ganancia.addEventListener("input", updateFromCostAndProfit);
+
+    // Changing Margin updates Price & Markup (Cost constant)
+    margenGanancia.addEventListener("input", updateFromCostAndMargin);
+
+    // Changing Price updates Margin & Markup (Cost constant)
+    precioVenta.addEventListener("input", updateFromPriceAndCost);
+
+    resetBtn.addEventListener("click", () => {
+        precioCosto.value = "";
+        markup.value = "";
+        margenGanancia.value = "";
+        precioVenta.value = "";
+        ganancia.value = "";
     });
-
-    function calcular() {
-        let costo = parseFloat(precioCosto.value) || 0;
-        let venta = parseFloat(precioVenta.value) || 0;
-        let margen = parseFloat(margenGanancia.value) || 0;
-        let mark = parseFloat(markup.value) || 0;
-
-        // Contar cuántos campos están llenos
-        let camposLlenos = 0;
-        if (costo > 0) camposLlenos++;
-        if (venta > 0) camposLlenos++;
-        if (margen > 0) camposLlenos++;
-        if (mark > 0) camposLlenos++;
-
-        if (camposLlenos < 2) {
-            alert('Por favor, completa al menos 2 campos para calcular');
-            return;
-        }
-
-        // Cálculos basados en los campos disponibles
-        if (costo > 0 && venta > 0) {
-            // Calcular margen y markup desde costo y venta
-            margen = ((venta - costo) / venta) * 100;
-            mark = ((venta - costo) / costo) * 100;
-        } else if (costo > 0 && margen > 0) {
-            // Calcular venta y markup desde costo y margen
-            venta = costo / (1 - margen / 100);
-            mark = ((venta - costo) / costo) * 100;
-        } else if (costo > 0 && mark > 0) {
-            // Calcular venta y margen desde costo y markup
-            venta = costo * (1 + mark / 100);
-            margen = ((venta - costo) / venta) * 100;
-        } else if (venta > 0 && margen > 0) {
-            // Calcular costo y markup desde venta y margen
-            costo = venta * (1 - margen / 100);
-            mark = ((venta - costo) / costo) * 100;
-        } else if (venta > 0 && mark > 0) {
-            // Calcular costo y margen desde venta y markup
-            costo = venta / (1 + mark / 100);
-            margen = ((venta - costo) / venta) * 100;
-        }
-
-        const ganancia = venta - costo;
-
-        // Actualizar los campos del formulario
-        precioCosto.value = costo.toFixed(2);
-        precioVenta.value = venta.toFixed(2);
-        margenGanancia.value = margen.toFixed(2);
-        markup.value = mark.toFixed(2);
-
-        // Mostrar resultados
-        document.getElementById('resultCosto').textContent = '$' + costo.toFixed(2);
-        document.getElementById('resultVenta').textContent = '$' + venta.toFixed(2);
-        document.getElementById('resultMargen').textContent = margen.toFixed(2) + '%';
-        document.getElementById('resultMarkup').textContent = mark.toFixed(2) + '%';
-        document.getElementById('resultGanancia').textContent = '$' + ganancia.toFixed(2);
-
-        result.classList.add('show');
-    }
-
-    window.resetForm = function() {
-        form.reset();
-        result.classList.remove('show');
-    }
 });

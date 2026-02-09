@@ -1,5 +1,4 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
@@ -27,6 +26,14 @@ import Layout from '../layouts/Layout.astro';
                     <input type="number" id="precioVenta" step="0.01" min="0" class="has-prefix" placeholder="0.00">
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label for="ganancia">Ganancia</label>
+                <div class="input-wrapper">
+                    <span class="prefix">$</span>
+                    <input type="number" id="ganancia" step="0.01" min="0" class="has-prefix" placeholder="0.00">
+                </div>
+            </div>
 
             <div class="form-group">
                 <label for="margenGanancia">Margen de Ganancia (%)</label>
@@ -45,38 +52,8 @@ import Layout from '../layouts/Layout.astro';
             </div>
 
             <div class="btn-group">
-                <button type="submit" class="btn-calculate">Calcular</button>
-                <button type="button" class="btn-reset" onclick="resetForm()">Limpiar</button>
+                <button type="button" id="resetBtn" class="btn-reset" onclick="resetForm()">Limpiar</button>
             </div>
         </form>
-
-        <div id="result" class="result">
-            <div class="result-item">
-                <span class="result-label">Precio de Costo:</span>
-                <span class="result-value" id="resultCosto">$0.00</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Precio de Venta:</span>
-                <span class="result-value" id="resultVenta">$0.00</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Margen de Ganancia:</span>
-                <span class="result-value" id="resultMargen">0%</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Markup:</span>
-                <span class="result-value" id="resultMarkup">0%</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Ganancia:</span>
-                <span class="result-value" id="resultGanancia">$0.00</span>
-            </div>
-        </div>
-
-        <div class="info-box">
-            <strong>Fórmulas:</strong>
-            • Margen = (Precio Venta - Precio Costo) / Precio Venta × 100<br>
-            • Markup = (Precio Venta - Precio Costo) / Precio Costo × 100
-        </div>
     </div>
 </Layout>
